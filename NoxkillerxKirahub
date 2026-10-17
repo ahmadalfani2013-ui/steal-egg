@@ -1,0 +1,315 @@
+-- ============================================
+-- NOX KILLER HUB x KIRA EDITION
+-- Premium UI | Top-Tier Scripts | Auto-Loader
+-- ============================================
+
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+local pg = player:WaitForChild("PlayerGui")
+
+-- Hapus GUI lama
+local old = pg:FindFirstChild("NoxKillerHub")
+if old then old:Destroy() end
+
+-- ============================================
+-- KONFIGURASI WARNA
+-- ============================================
+local Theme = {
+    Bg = Color3.fromRGB(15, 15, 20),
+    Panel = Color3.fromRGB(22, 22, 30),
+    Accent = Color3.fromRGB(138, 43, 226), -- Purple
+    AccentHover = Color3.fromRGB(155, 89, 255),
+    Text = Color3.fromRGB(255, 255, 255),
+    TextMuted = Color3.fromRGB(150, 150, 160),
+    Success = Color3.fromRGB(0, 255, 128),
+    Error = Color3.fromRGB(255, 75, 75)
+}
+
+-- ============================================
+-- DAFTAR SCRIPT (PRE-LOADED + KIRA HUB)
+-- ============================================
+local Scripts = {
+    {
+        Name = "Kira Hub (Recommended)",
+        Desc = "Auto Steal, Pilih Rarity/Area, Auto Treadmill",
+        Link = "https://raw.githubusercontent.com/LSSOPS/OpenSource/refs/heads/main/KiraHub_Steal_An_Egg.lua",
+        Game = "Steal An Egg"
+    },
+    {
+        Name = "Axur Hub",
+        Desc = "Ringan, Speed Bypass, Egg ESP",
+        Link = "https://raw.githubusercontent.com/XE3Scripts/Axur-sGamesHub/refs/heads/main/StealAnEgg",
+        Game = "Steal An Egg"
+    },
+    {
+        Name = "Chilli Hub",
+        Desc = "Instant Steal, Anti Ragdoll",
+        Link = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua",
+        Game = "Steal An Egg"
+    },
+    {
+        Name = "Monarch Hub",
+        Desc = "Auto Hatch, Sniper, Return to Plot",
+        Link = "https://raw.githubusercontent.com/nobuxy/monarch.win/refs/heads/main/Monarch.lua",
+        Game = "Steal An Egg"
+    }
+}
+
+-- ============================================
+-- UI UTAMA
+-- ============================================
+local gui = Instance.new("ScreenGui")
+gui.Name = "NoxKillerHub"
+gui.ResetOnSpawn = false
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.Parent = pg
+
+-- Tombol Floating (Minimize)
+local floatBtn = Instance.new("TextButton")
+floatBtn.Size = UDim2.fromOffset(50, 50)
+floatBtn.Position = UDim2.new(0, 20, 0.5, -25)
+floatBtn.BackgroundColor3 = Theme.Accent
+floatBtn.Text = "NK"
+floatBtn.TextColor3 = Theme.Text
+floatBtn.Font = Enum.Font.GothamBlack
+floatBtn.TextSize = 18
+floatBtn.Visible = false
+floatBtn.Parent = gui
+Instance.new("UICorner", floatBtn).CornerRadius = UDim.new(1, 0)
+
+-- Frame Utama
+local main = Instance.new("Frame")
+main.Size = UDim2.fromOffset(420, 520)
+main.Position = UDim2.new(0.5, -210, 0.5, -260)
+main.BackgroundColor3 = Theme.Bg
+main.BorderSizePixel = 0
+main.Active = true
+main.ClipsDescendants = true
+main.Parent = gui
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 12)
+
+local stroke = Instance.new("UIStroke")
+stroke.Color = Theme.Accent
+stroke.Thickness = 1.5
+stroke.Transparency = 0.5
+stroke.Parent = main
+
+-- Header (Draggable)
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, 45)
+header.BackgroundColor3 = Theme.Panel
+header.BorderSizePixel = 0
+header.Parent = main
+Instance.new("UICorner", header).CornerRadius = UDim.new(0, 12)
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -100, 1, 0)
+title.Position = UDim2.fromOffset(15, 0)
+title.BackgroundTransparency = 1
+title.Text = "⚡ NOX KILLER x KIRA"
+title.TextColor3 = Theme.Accent
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = header
+
+-- Tombol Minimize & Close
+local btnMin = Instance.new("TextButton")
+btnMin.Size = UDim2.fromOffset(30, 30)
+btnMin.Position = UDim2.new(1, -70, 0, 7)
+btnMin.BackgroundColor3 = Theme.Bg
+btnMin.Text = "—"
+btnMin.TextColor3 = Theme.Text
+btnMin.Font = Enum.Font.GothamBold
+btnMin.Parent = header
+Instance.new("UICorner", btnMin).CornerRadius = UDim.new(0, 6)
+
+local btnClose = Instance.new("TextButton")
+btnClose.Size = UDim2.fromOffset(30, 30)
+btnClose.Position = UDim2.new(1, -35, 0, 7)
+btnClose.BackgroundColor3 = Theme.Error
+btnClose.Text = "×"
+btnClose.TextColor3 = Theme.Text
+btnClose.Font = Enum.Font.GothamBold
+btnClose.Parent = header
+Instance.new("UICorner", btnClose).CornerRadius = UDim.new(0, 6)
+
+-- ============================================
+-- AREA SCROLL (List Script)
+-- ============================================
+local scroll = Instance.new("ScrollingFrame")
+scroll.Size = UDim2.new(1, -20, 1, -130)
+scroll.Position = UDim2.fromOffset(10, 55)
+scroll.BackgroundTransparency = 1
+scroll.ScrollBarThickness = 3
+scroll.ScrollBarImageColor3 = Theme.Accent
+scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scroll.Parent = main
+
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0, 10)
+layout.Parent = scroll
+
+-- ============================================
+-- FUNGSI NOTIFIKASI
+-- ============================================
+local notif = Instance.new("TextLabel")
+notif.Size = UDim2.new(1, -20, 0, 30)
+notif.Position = UDim2.new(0, 10, 1, -45)
+notif.BackgroundColor3 = Theme.Panel
+notif.Text = "Pilih script di atas. (Rekomendasi: Kira Hub)"
+notif.TextColor3 = Theme.TextMuted
+notif.Font = Enum.Font.Gotham
+notif.TextSize = 11
+notif.Parent = main
+Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 6)
+
+local function showNotif(text, color)
+    notif.Text = text
+    notif.TextColor3 = color or Theme.Text
+    if color == Theme.Success or color == Theme.Error then
+        task.delay(3, function()
+            if notif and notif.Parent then
+                notif.Text = "Pilih script di atas. (Rekomendasi: Kira Hub)"
+                notif.TextColor3 = Theme.TextMuted
+            end
+        end)
+    end
+end
+
+-- ============================================
+-- FUNGSI BIKIN KARTU SCRIPT
+-- ============================================
+for i, v in ipairs(Scripts) do
+    local card = Instance.new("Frame")
+    card.Size = UDim2.new(1, 0, 0, 70)
+    card.BackgroundColor3 = Theme.Panel
+    card.BorderSizePixel = 0
+    card.Parent = scroll
+    Instance.new("UICorner", card).CornerRadius = UDim.new(0, 8)
+
+    local cardStroke = Instance.new("UIStroke")
+    cardStroke.Color = Theme.Accent
+    cardStroke.Thickness = 1
+    cardStroke.Transparency = 0.8
+    cardStroke.Parent = card
+
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Size = UDim2.new(1, -120, 0, 25)
+    nameLabel.Position = UDim2.fromOffset(15, 10)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = v.Name
+    nameLabel.TextColor3 = (i == 1) and Theme.Accent or Theme.Text -- Highlight Kira Hub
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextSize = 14
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+    nameLabel.Parent = card
+
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Size = UDim2.new(1, -120, 0, 20)
+    descLabel.Position = UDim2.fromOffset(15, 35)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Text = v.Desc
+    descLabel.TextColor3 = Theme.TextMuted
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 11
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.Parent = card
+
+    local loadBtn = Instance.new("TextButton")
+    loadBtn.Size = UDim2.fromOffset(80, 30)
+    loadBtn.Position = UDim2.new(1, -95, 0.5, -15)
+    loadBtn.BackgroundColor3 = Theme.Accent
+    loadBtn.Text = "LOAD"
+    loadBtn.TextColor3 = Theme.Text
+    loadBtn.Font = Enum.Font.GothamBold
+    loadBtn.TextSize = 12
+    loadBtn.Parent = card
+    Instance.new("UICorner", loadBtn).CornerRadius = UDim.new(0, 6)
+
+    loadBtn.MouseEnter:Connect(function()
+        TweenService:Create(loadBtn, TweenInfo.new(0.2), {BackgroundColor3 = Theme.AccentHover}):Play()
+    end)
+    loadBtn.MouseLeave:Connect(function()
+        TweenService:Create(loadBtn, TweenInfo.new(0.2), {BackgroundColor3 = Theme.Accent}):Play()
+    end)
+
+    -- LOGIKA EKSEKUSI
+    loadBtn.MouseButton1Click:Connect(function()
+        showNotif("Memuat " .. v.Name .. "...", Theme.Accent)
+        loadBtn.Text = "..."
+        loadBtn.BackgroundColor3 = Theme.Panel
+        
+        task.spawn(function()
+            local success, err = pcall(function()
+                loadstring(game:HttpGet(v.Link))()
+            end)
+            
+            if success then
+                showNotif("✅ " .. v.Name .. " berhasil dimuat!", Theme.Success)
+                loadBtn.Text = "DONE"
+                loadBtn.BackgroundColor3 = Theme.Success
+                task.wait(2)
+                gui:Destroy() -- Hancurkan hub jika script berhasil dimuat
+            else
+                showNotif("❌ Gagal: " .. tostring(err):sub(1, 30), Theme.Error)
+                loadBtn.Text = "ERROR"
+                loadBtn.BackgroundColor3 = Theme.Error
+                task.wait(2)
+                loadBtn.Text = "LOAD"
+                loadBtn.BackgroundColor3 = Theme.Accent
+            end
+        end)
+    end)
+end
+
+-- ============================================
+-- DRAG & MINIMIZE SYSTEM
+-- ============================================
+local dragging, dragInput, dragStart, startPos
+header.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = main.Position
+    end
+end)
+header.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+btnMin.MouseButton1Click:Connect(function()
+    main.Visible = false
+    floatBtn.Visible = true
+end)
+
+floatBtn.MouseButton1Click:Connect(function()
+    main.Visible = true
+    floatBtn.Visible = false
+end)
+
+btnClose.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
+
+-- Animasi Muncul
+main.Size = UDim2.fromOffset(0, 0)
+TweenService:Create(main, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.fromOffset(420, 520)}):Play()
