@@ -1,175 +1,254 @@
--- ============================================
--- TRIPLE HUB WRAPPER (PULSE x CHILLI x SENA)
--- 1 GUI Bersih, Kontrol 3 Script
--- ============================================
+-- =========================================================================
+-- 🌶️ CHILLI V5 STYLE LOADER (TANPA KEY)
+-- UI Persis Chilli V5, Tapi Bisa Load Chilli, Pulse, & Sena
+-- =========================================================================
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+local ChilliAvatarId = "rbxassetid://92622270383869"
 
 -- LINK SCRIPT (SEMUA KEYLESS)
-local PulseURL = "https://api.luarmor.net/files/v4/loaders/9eaf6021130040db2646aa9b094427ef.lua"
 local ChilliURL = "https://luauforge-antiraw.netlify.app/raw/b2GaCbtITNxIA6Qayyauq1a"
--- Link Sena Hub yang beneran Keyless:
+local PulseURL = "https://api.luarmor.net/files/v4/loaders/9eaf6021130040db2646aa9b094427ef.lua"
 local SenaURL = "https://raw.githubusercontent.com/sabscrip-arch/srver/refs/heads/main/Stealanegg"
 
--- Hapus GUI Wrapper lama
-local old = PlayerGui:FindFirstChild("TripleWrapper")
-if old then old:Destroy() end
+if CoreGui:FindFirstChild("ChilliV5_GetKeyUI") then CoreGui.ChilliV5_GetKeyUI:Destroy() end
 
--- ============================================
--- 1. BIKIN GUI MASTER (Tampilan Bersih)
--- ============================================
-local masterGui = Instance.new("ScreenGui")
-masterGui.Name = "TripleWrapper"
-masterGui.ResetOnSpawn = false
-masterGui.Parent = PlayerGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ChilliV5_GetKeyUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+pcall(function() ScreenGui.Parent = CoreGui end)
+if not ScreenGui.Parent then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 
-local main = Instance.new("Frame")
-main.Size = UDim2.fromOffset(200, 200)
-main.Position = UDim2.new(0, 20, 0.5, -100)
-main.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-main.BorderSizePixel = 0
-main.Active = true
-main.Draggable = true
-main.Parent = masterGui
-Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.Size = UDim2.new(0, 440, 0, 420)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 17, 23)
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.ZIndex = 30
+MainFrame.Parent = ScreenGui
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 18)
 
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 35)
-title.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
-title.Text = "⚡ TRIPLE WRAPPER"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.Font = Enum.Font.GothamBold
-title.TextSize = 12
-title.Parent = main
-Instance.new("UICorner", title).CornerRadius = UDim.new(0, 10)
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Thickness = 1
+MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+MainStroke.Color = Color3.fromRGB(38, 43, 54)
 
--- Tombol Buka/Tutup Chilli
-local btnChilli = Instance.new("TextButton")
-btnChilli.Size = UDim2.new(1, -20, 0, 35)
-btnChilli.Position = UDim2.fromOffset(10, 45)
-btnChilli.BackgroundColor3 = Color3.fromRGB(225, 29, 72)
-btnChilli.Text = "Buka Chilli Hub"
-btnChilli.TextColor3 = Color3.fromRGB(255, 255, 255)
-btnChilli.Font = Enum.Font.GothamBold
-btnChilli.TextSize = 11
-btnChilli.Parent = main
-Instance.new("UICorner", btnChilli).CornerRadius = UDim.new(0, 6)
+-- HEADER
+local HeaderBar = Instance.new("Frame")
+HeaderBar.Size = UDim2.new(1, -28, 0, 40)
+HeaderBar.Position = UDim2.new(0, 14, 0, 12)
+HeaderBar.BackgroundTransparency = 1
+HeaderBar.ZIndex = 31
+HeaderBar.Parent = MainFrame
 
--- Tombol Buka/Tutup Sena
-local btnSena = Instance.new("TextButton")
-btnSena.Size = UDim2.new(1, -20, 0, 35)
-btnSena.Position = UDim2.fromOffset(10, 90)
-btnSena.BackgroundColor3 = Color3.fromRGB(0, 255, 128)
-btnSena.Text = "Buka Sena Hub"
-btnSena.TextColor3 = Color3.fromRGB(0, 0, 0)
-btnSena.Font = Enum.Font.GothamBold
-btnSena.TextSize = 11
-btnSena.Parent = main
-Instance.new("UICorner", btnSena).CornerRadius = UDim.new(0, 6)
+local MiniLogo = Instance.new("Frame")
+MiniLogo.Size = UDim2.new(0, 28, 0, 28)
+MiniLogo.Position = UDim2.new(0, 0, 0.5, -14)
+MiniLogo.BackgroundColor3 = Color3.fromRGB(24, 27, 36)
+MiniLogo.ClipsDescendants = true
+MiniLogo.ZIndex = 32
+MiniLogo.Parent = HeaderBar
+Instance.new("UICorner", MiniLogo).CornerRadius = UDim.new(1, 0)
+local MiniLogoStroke = Instance.new("UIStroke", MiniLogo)
+MiniLogoStroke.Color = Color3.fromRGB(225, 29, 72)
+MiniLogoStroke.Thickness = 1
 
--- Tombol Buka/Tutup Pulse
-local btnPulse = Instance.new("TextButton")
-btnPulse.Size = UDim2.new(1, -20, 0, 35)
-btnPulse.Position = UDim2.fromOffset(10, 135)
-btnPulse.BackgroundColor3 = Color3.fromRGB(226, 168, 62)
-btnPulse.Text = "Buka Pulse Hub"
-btnPulse.TextColor3 = Color3.fromRGB(255, 255, 255)
-btnPulse.Font = Enum.Font.GothamBold
-btnPulse.TextSize = 11
-btnPulse.Parent = main
-Instance.new("UICorner", btnPulse).CornerRadius = UDim.new(0, 6)
+local MiniLogoImg = Instance.new("ImageLabel")
+MiniLogoImg.Size = UDim2.new(1, 0, 1, 0)
+MiniLogoImg.BackgroundTransparency = 1
+MiniLogoImg.Image = ChilliAvatarId
+MiniLogoImg.ScaleType = Enum.ScaleType.Fit
+MiniLogoImg.ZIndex = 33
+MiniLogoImg.Parent = MiniLogo
 
--- ============================================
--- 2. LOAD SCRIPT & SEMBUNYIIN GUI ASLINYA
--- ============================================
-local chilliGui, senaGui, pulseGui
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -100, 0, 18)
+TitleLabel.Position = UDim2.new(0, 36, 0, 2)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "CHILLI HUB V5 (KEYLESS MODE)"
+TitleLabel.TextColor3 = Color3.fromRGB(241, 245, 249)
+TitleLabel.TextSize = 11.5
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.ZIndex = 32
+TitleLabel.Parent = HeaderBar
 
-local function hideOriginalGuis()
-    for _, gui in ipairs(CoreGui:GetDescendants()) do
-        if gui:IsA("ScreenGui") then
-            local name = gui.Name:lower()
-            if name:find("chilli") then
-                if not chilliGui then chilliGui = gui end
-                gui.Enabled = false
-            elseif name:find("sena") then
-                if not senaGui then senaGui = gui end
-                gui.Enabled = false
-            elseif name:find("pulse") or name:find("slate") then
-                if not pulseGui then pulseGui = gui end
-                gui.Enabled = false
-            end
+local SubTitleLabel = Instance.new("TextLabel")
+SubTitleLabel.Size = UDim2.new(1, -100, 0, 14)
+SubTitleLabel.Position = UDim2.new(0, 36, 0, 20)
+SubTitleLabel.BackgroundTransparency = 1
+SubTitleLabel.Text = "Select Script to Inject (No Key Required)"
+SubTitleLabel.TextColor3 = Color3.fromRGB(148, 163, 184)
+SubTitleLabel.TextSize = 9.5
+SubTitleLabel.Font = Enum.Font.GothamMedium
+SubTitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+SubTitleLabel.ZIndex = 32
+SubTitleLabel.Parent = HeaderBar -- INI BAGIAN YANG KEPOTONG TADI
+
+-- BANNER & CENTER TITLE
+local Banner = Instance.new("Frame")
+Banner.Size = UDim2.new(1, -28, 0, 70)
+Banner.Position = UDim2.new(0, 14, 0, 65)
+Banner.BackgroundColor3 = Color3.fromRGB(20, 23, 31)
+Banner.BorderSizePixel = 0
+Banner.ZIndex = 31
+Banner.Parent = MainFrame
+Instance.new("UICorner", Banner).CornerRadius = UDim.new(0, 10)
+local BannerStroke = Instance.new("UIStroke", Banner)
+BannerStroke.Thickness = 1
+BannerStroke.Color = Color3.fromRGB(225, 29, 72)
+BannerStroke.Transparency = 0.5
+
+local CenterTitle = Instance.new("TextLabel")
+CenterTitle.Size = UDim2.new(1, 0, 0, 25)
+CenterTitle.Position = UDim2.new(0, 0, 0.5, -18)
+CenterTitle.BackgroundTransparency = 1
+CenterTitle.Text = "CHILLI HUB V5 × RAEL"
+CenterTitle.TextColor3 = Color3.fromRGB(225, 29, 72)
+CenterTitle.Font = Enum.Font.GothamBlack
+CenterTitle.TextSize = 20
+CenterTitle.ZIndex = 32
+CenterTitle.Parent = Banner
+
+local CenterSub = Instance.new("TextLabel")
+CenterSub.Size = UDim2.new(1, 0, 0, 15)
+CenterSub.Position = UDim2.new(0, 0, 0.5, 7)
+CenterSub.BackgroundTransparency = 1
+CenterSub.Text = "Steal An Egg 🥚 Edition"
+CenterSub.TextColor3 = Color3.fromRGB(148, 163, 184)
+CenterSub.Font = Enum.Font.GothamMedium
+CenterSub.TextSize = 12
+CenterSub.ZIndex = 32
+CenterSub.Parent = Banner
+
+-- FUNGSI LOAD SCRIPT
+local function LoadScript(url, name)
+    -- Animasi Loading
+    local LoadingNotif = Instance.new("TextLabel")
+    LoadingNotif.Size = UDim2.new(1, -28, 0, 40)
+    LoadingNotif.Position = UDim2.new(0, 14, 0, 150)
+    LoadingNotif.BackgroundColor3 = Color3.fromRGB(20, 23, 31)
+    LoadingNotif.Text = "⏳ Loading " .. name .. "..."
+    LoadingNotif.TextColor3 = Color3.fromRGB(255, 255, 255)
+    LoadingNotif.Font = Enum.Font.GothamBold
+    LoadingNotif.TextSize = 14
+    LoadingNotif.ZIndex = 35
+    LoadingNotif.Parent = MainFrame
+    Instance.new("UICorner", LoadingNotif).CornerRadius = UDim.new(0, 8)
+
+    task.spawn(function()
+        local ok, err = pcall(function()
+            loadstring(game:HttpGet(url))()
+        end)
+        if ok then
+            task.wait(1)
+            ScreenGui:Destroy() -- Hapus UI kalau script sukses
+        else
+            LoadingNotif.Text = "❌ Gagal Load! Coba lagi."
+            LoadingNotif.TextColor3 = Color3.fromRGB(255, 100, 100)
         end
-    end
+    end)
 end
 
--- Load Pulse
-task.spawn(function() pcall(function() loadstring(game:HttpGet(PulseURL))() end) end)
+-- TOMBOL 1: CHILLI
+local BtnChilli = Instance.new("TextButton")
+BtnChilli.Size = UDim2.new(1, -28, 0, 40)
+BtnChilli.Position = UDim2.new(0, 14, 0, 150)
+BtnChilli.BackgroundColor3 = Color3.fromRGB(225, 29, 72)
+BtnChilli.Text = "🌶️ INJECT CHILLI HUB"
+BtnChilli.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnChilli.Font = Enum.Font.GothamBold
+BtnChilli.TextSize = 13
+BtnChilli.ZIndex = 32
+BtnChilli.Parent = MainFrame
+Instance.new("UICorner", BtnChilli).CornerRadius = UDim.new(0, 8)
+BtnChilli.MouseButton1Click:Connect(function() LoadScript(ChilliURL, "Chilli Hub") end)
 
--- Load Chilli
-task.spawn(function()
-    task.wait(1.5)
-    pcall(function() loadstring(game:HttpGet(ChilliURL))() end)
-end)
+-- TOMBOL 2: SENA
+local BtnSena = Instance.new("TextButton")
+BtnSena.Size = UDim2.new(1, -28, 0, 40)
+BtnSena.Position = UDim2.new(0, 14, 0, 200)
+BtnSena.BackgroundColor3 = Color3.fromRGB(0, 255, 128)
+BtnSena.Text = "🍃 INJECT SENA HUB"
+BtnSena.TextColor3 = Color3.fromRGB(0, 0, 0)
+BtnSena.Font = Enum.Font.GothamBold
+BtnSena.TextSize = 13
+BtnSena.ZIndex = 32
+BtnSena.Parent = MainFrame
+Instance.new("UICorner", BtnSena).CornerRadius = UDim.new(0, 8)
+BtnSena.MouseButton1Click:Connect(function() LoadScript(SenaURL, "Sena Hub") end)
 
--- Load Sena
-task.spawn(function()
-    task.wait(3)
-    pcall(function() loadstring(game:HttpGet(SenaURL))() end)
-end)
+-- TOMBOL 3: PULSE
+local BtnPulse = Instance.new("TextButton")
+BtnPulse.Size = UDim2.new(1, -28, 0, 40)
+BtnPulse.Position = UDim2.new(0, 14, 0, 250)
+BtnPulse.BackgroundColor3 = Color3.fromRGB(226, 168, 62)
+BtnPulse.Text = "💠 INJECT PULSE HUB"
+BtnPulse.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnPulse.Font = Enum.Font.GothamBold
+BtnPulse.TextSize = 13
+BtnPulse.ZIndex = 32
+BtnPulse.Parent = MainFrame
+Instance.new("UICorner", BtnPulse).CornerRadius = UDim.new(0, 8)
+BtnPulse.MouseButton1Click:Connect(function() LoadScript(PulseURL, "Pulse Hub") end)
 
--- Pantau kalau GUI baru muncul, langsung sembunyiin
-CoreGui.DescendantAdded:Connect(function()
-    task.wait(0.5)
-    hideOriginalGuis()
-end)
+-- NOTICE BAWAH
+local Notice = Instance.new("TextLabel")
+Notice.Size = UDim2.new(1, -28, 0, 40)
+Notice.Position = UDim2.new(0, 14, 1, -60)
+Notice.BackgroundTransparency = 1
+Notice.Text = "📌 Pilih salah satu script di atas untuk dimuat.\nSemua script sudah Keyless (Tanpa Key)."
+Notice.TextColor3 = Color3.fromRGB(148, 163, 184)
+Notice.Font = Enum.Font.GothamMedium
+Notice.TextSize = 11
+Notice.TextWrapped = true
+Notice.ZIndex = 32
+Notice.Parent = MainFrame
 
-task.wait(4)
-hideOriginalGuis()
+-- TOMBOL CLOSE (X)
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Size = UDim2.new(0, 28, 0, 28)
+CloseBtn.Position = UDim2.new(1, -38, 0, 12)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(30, 34, 45)
+CloseBtn.Text = "X"
+CloseBtn.TextColor3 = Color3.fromRGB(241, 245, 249)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 12
+CloseBtn.ZIndex = 34
+CloseBtn.Parent = HeaderBar
+Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
+CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- ============================================
--- 3. LOGIKA TOMBOL BUKA/TUTUP
--- ============================================
-local chilliOpen = false
-btnChilli.MouseButton1Click:Connect(function()
-    if chilliGui and chilliGui.Parent then
-        chilliOpen = not chilliOpen
-        chilliGui.Enabled = chilliOpen
-        btnChilli.Text = chilliOpen and "Tutup Chilli Hub" or "Buka Chilli Hub"
-    else
-        btnChilli.Text = "Chilli Loading..."
-        task.wait(2)
-        hideOriginalGuis()
-        btnChilli.Text = "Buka Chilli Hub"
+-- FITUR DRAG UI
+local dragging, dragInput, dragStart, startPos
+HeaderBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
     end
 end)
-
-local senaOpen = false
-btnSena.MouseButton1Click:Connect(function()
-    if senaGui and senaGui.Parent then
-        senaOpen = not senaOpen
-        senaGui.Enabled = senaOpen
-        btnSena.Text = senaOpen and "Tutup Sena Hub" or "Buka Sena Hub"
-    else
-        btnSena.Text = "Sena Loading..."
-        task.wait(2)
-        hideOriginalGuis()
-        btnSena.Text = "Buka Sena Hub"
+HeaderBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
     end
 end)
-
-local pulseOpen = false
-btnPulse.MouseButton1Click:Connect(function()
-    if pulseGui and pulseGui.Parent then
-        pulseOpen = not pulseOpen
-        pulseGui.Enabled = pulseOpen
-        btnPulse.Text = pulseOpen and "Tutup Pulse Hub" or "Buka Pulse Hub"
-    else
-        btnPulse.Text = "Pulse Loading..."
-        task.wait(2)
-        hideOriginalGuis()
-        btnPulse.Text = "Buka Pulse Hub"
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+game:GetService("UserInputService").InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
     end
 end)
